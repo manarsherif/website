@@ -73,7 +73,24 @@ def search(request):
 
 
 
+#Menna
 
+def product_list(request, category_slug=None):
+	category = None
+	categories = ImageClass.objects.all()
+	products = Photo.objects.filter(available=True)
+	if category_slug:
+		category = get_object_or_404(ImageClass,slug=category_slug)
+		products = products.filter(category = category)
+	return render(request,'website/photos/list.html',{'category':category, 'categories':categories,'products':products})
+
+
+
+
+def product_detail(request,id,slug):
+	producr = get_object_or404(Photo,id=id,slug=slug,available=True)
+	cart_product_form=CartAddProductForm()
+	return render(request,'website/photos/detail.html',{'product':product,'cart_product_form':cart_product_form})
 
 
 
