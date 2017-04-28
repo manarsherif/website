@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cart'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,5 @@ AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend', )
 
 PHOTOS_ROOT = os.path.join(BASE_DIR , 'photos')
 PHOTOS_URL = '/photos/'
+
+CART_SESSION_ID = 'cart'
