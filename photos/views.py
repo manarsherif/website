@@ -1,7 +1,7 @@
 from django.views import generic
 from django.shortcuts import render , redirect
 from django.views.generic.edit import CreateView , UpdateView , DeleteView
-from models import Photo , ImageClass
+from .models import Photo , ImageClass
 from django.http import HttpResponse
 import numpy as np
 import tensorflow as tf
@@ -14,7 +14,7 @@ import csv
 from django.contrib.auth import authenticate , login
 from django.views.generic import View
 from django.contrib.auth.models import User
-
+from django.shortcuts import render, get_object_or_404
 
 '''images_dir = '/home/asmaanabil/Desktop/test2/'
 modelFullPath = '/home/asmaanabil/Downloads/inception-2015-12-05/classify_image_graph_def.pb'
@@ -56,12 +56,12 @@ class Test(generic.DetailView):
 	model = Photo
 	template_name='photos/test.html'
 
-class Index(generic.ListView):
+'''class Index(generic.ListView):
 	model=Photo
-	template_name='photos/index.html'
+	template_name='photos/index.html'''''
 
 def search(request):
-	related_images = ImageClass().photo_set.all()
+	'''related_images = ImageClass().photo_set.all()
 	input_text = ""
 	if request.method == "POST":
 		input_text = request.POST.get("input")
@@ -69,27 +69,31 @@ def search(request):
 			if image_class.class_name == input_text.lower() :
 				related_images = image_class.photo_set.all()
 				break
-	return render(request, 'photos/search.html' , {'input_text' : input_text , 'related_images':related_images })
+	return render(request, 'photos/search.html' , {'input_text' : input_text , 'related_images':related_images })'''
+	return render(request,
+				  'photos/detail.html')
 
 
 
+def product_list(request, category_slug=None):
+    category = None
+    categories = ImageClass.objects.all()
+    products = Photo.objects.filter(available=True)
+    if category_slug:
+        category = get_object_or_404(ImageClass, slug=category_slug)
+        products = products.filter(category=category)
+    return render(request,
+                  'photos/list.html',
+                  {'category': category,
+                   'categories': categories,
+                   'products': products})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def product_detail(request, id, slug):
+    product = get_object_or_404(Photo,
+                                id=id,
+                                slug=slug,
+                                available=True)
+    return render(request,
+                  'photos/detail.html',
+                  {'product': product})
